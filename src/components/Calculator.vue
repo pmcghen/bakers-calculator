@@ -28,23 +28,23 @@
         <td><label for="txtFlourWeight">Flour</label></td>
         <td>100%</td>
         <td>
-          <input id="txtFlourWeight" v-model="flourWeight" />
+          <input id="txtFlourWeight" v-model="ingredients[0].totals.weight">
         </td>
       </tr>
       <tr>
-        <td><label for="txtWaterPercentage">Water</label></td>
-        <td><input id="txtWaterPercentage" v-model="waterPercentage" @keyup="calculateWaterWeight" /><span>%</span></td>
-        <td><input v-model="waterWeight" /></td>
+        <td><label for="water">Water</label></td>
+        <td><input id="water" @keyup="calculateWeight" /><span>%</span></td>
+        <td><input v-model="ingredients[1].totals.weight"></td>
       </tr>
       <tr>
-        <td><label for="txtSaltPercentage">Salt</label></td>
-        <td><input id="txtSaltPercentage" v-model="saltPercentage" @keyup="calculateSaltWeight"><span>%</span></td>
-        <td><input v-model="saltWeight"></td>
+        <td><label for="salt">Salt</label></td>
+        <td><input id="salt" @keyup="calculateWeight"><span>%</span></td>
+        <td><input v-model="ingredients[2].totals.weight"></td>
       </tr>
       <tr>
-        <td><label for="txtYeastPercentage">Yeast</label></td>
-        <td><input id="txtYeastPercentage" v-model="yeastPercentage" @keyup="calculateYeastWeight"><span>%</span></td>
-        <td><input v-model="yeastWeight"></td>
+        <td><label for="yeast">Yeast</label></td>
+        <td><input id="yeast" @keyup="calculateWeight"><span>%</span></td>
+        <td><input v-model="ingredients[3].totals.weight"></td>
       </tr>
     </tbody>
   </table>
@@ -54,24 +54,46 @@
 export default {
   data () {
     return {
-      flourWeight: 0,
-      waterPercentage: 0,
-      waterWeight: 0,
-      saltPercentage: 0,
-      saltWeight: 0,
-      yeastPercentage: 0,
-      yeastWeight: 0
+      ingredients: [{
+        name: 'flour',
+        totals: {
+          percentage: 100,
+          weight: 0
+        }
+      }, {
+        name: 'water',
+        totals: {
+          percentage: 0,
+          weight: 0
+        }
+      }, {
+        name: 'salt',
+        totals: {
+          percentage: 0,
+          weight: 0
+        }
+      }, {
+        name: 'yeast',
+        totals: {
+          percentage: 0,
+          weight: 0
+        }
+      }]
     }
   },
   methods: {
-    calculateWaterWeight () {
-      this.waterWeight = Math.floor((this.waterPercentage / 100) * this.flourWeight)
-    },
-    calculateSaltWeight () {
-      this.saltWeight = Math.floor((this.saltPercentage / 100) * this.flourWeight)
-    },
-    calculateYeastWeight () {
-      this.yeastWeight = Math.floor((this.yeastPercentage / 100) * this.flourWeight)
+    calculateWeight (event) {
+      const ingredient = event.target.getAttribute('id')
+      const flour = this.ingredients[0].totals.weight
+
+      if (flour) {
+        for (const ing of this.ingredients) {
+          if (ing.name === ingredient) {
+            ing.totals.percentage = event.target.value / 100
+            ing.totals.weight = ing.totals.percentage * flour
+          }
+        }
+      }
     }
   }
 }
