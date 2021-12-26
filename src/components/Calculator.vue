@@ -24,30 +24,25 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><label for="txtFlourWeight">Flour</label></td>
-        <td>100%</td>
+      <tr v-for="ingredient in this.ingredients" :key="ingredient.name">
         <td>
-          <input id="txtFlourWeight" v-model="ingredients[0].totals.weight">
+          <span v-if="ingredient.name">
+            {{ ingredient.name }}
+          </span>
+          <input v-else type="text">
         </td>
-      </tr>
-      <tr>
-        <td><label for="water">Water</label></td>
-        <td><input id="water" @keyup="calculateWeight" /><span>%</span></td>
-        <td><input v-model="ingredients[1].totals.weight"></td>
-      </tr>
-      <tr>
-        <td><label for="salt">Salt</label></td>
-        <td><input id="salt" @keyup="calculateWeight"><span>%</span></td>
-        <td><input v-model="ingredients[2].totals.weight"></td>
-      </tr>
-      <tr>
-        <td><label for="yeast">Yeast</label></td>
-        <td><input id="yeast" @keyup="calculateWeight"><span>%</span></td>
-        <td><input v-model="ingredients[3].totals.weight"></td>
+        <td>
+          <span v-if="ingredient.name.toLowerCase() ==='flour'">100</span>
+          <input v-else v-model="ingredient.totals.percentage" @keyup="calculateWeight(ingredient)">%
+        </td>
+        <td>
+          <input v-if="ingredient.name.toLowerCase() ==='flour'" type="text" v-model="ingredient.totals.weight">
+          <span v-else>{{ ingredient.totals.weight }}</span>
+        </td>
       </tr>
     </tbody>
   </table>
+  <button @click="addIngredient">Add an ingredient</button>
 </template>
 
 <script>
@@ -55,25 +50,25 @@ export default {
   data () {
     return {
       ingredients: [{
-        name: 'flour',
+        name: 'Flour',
         totals: {
           percentage: 100,
           weight: 0
         }
       }, {
-        name: 'water',
+        name: 'Water',
         totals: {
           percentage: 0,
           weight: 0
         }
       }, {
-        name: 'salt',
+        name: 'Salt',
         totals: {
           percentage: 0,
           weight: 0
         }
       }, {
-        name: 'yeast',
+        name: 'Yeast',
         totals: {
           percentage: 0,
           weight: 0
@@ -82,18 +77,15 @@ export default {
     }
   },
   methods: {
-    calculateWeight (event) {
-      const ingredient = event.target.getAttribute('id')
+    calculateWeight (el) {
       const flour = this.ingredients[0].totals.weight
 
       if (flour) {
-        for (const ing of this.ingredients) {
-          if (ing.name === ingredient) {
-            ing.totals.percentage = event.target.value / 100
-            ing.totals.weight = ing.totals.percentage * flour
-          }
-        }
+        el.totals.weight = (el.totals.percentage / 100) * flour
       }
+    },
+    addIngredient () {
+      this.ingredients.push({ name: '', totals: { percentage: 0, weight: 0 } })
     }
   }
 }
