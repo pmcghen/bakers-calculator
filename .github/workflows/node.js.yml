@@ -27,4 +27,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm run gh-pages-deploy --if-present
+    - run: |
+        git config user.name "Pat McGhen"
+        git config user.email "patrickmcghen@gmail.com"
+        npm run gh-pages-deploy
