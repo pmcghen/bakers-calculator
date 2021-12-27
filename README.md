@@ -2,6 +2,8 @@
 
 🍞 Calculates necessary amounts of bread ingredients based on the amount of flour used.
 
+🥐 [See it in action!](https://pmcghen.github.io/bakers-calculator/)
+
 🥖 More to come!
 
 ## Project setup
